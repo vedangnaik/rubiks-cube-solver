@@ -42,6 +42,7 @@ class Cube:
         UP_DOWN = 1
         RIGHT_LEFT = 2
         FRONT_BACK = 3
+
     # Face numbers. An enum is too inconvenient.
     __FRONT = 0
     __RIGHT = 1
@@ -95,6 +96,12 @@ class Cube:
             self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2] = self.__cubeRepr[Cube.__DOWN][1][2], self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0]
             self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0]
 
+        # Take advantage of FRONT-BACK symmetry to reuse the F code. See code for R.
+        elif move == Cube.Move.B:
+            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
+            self.turn(Cube.Move.F)
+            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
+
         # Take advantage of RIGHT-LEFT symmetry to reuse the R code.
         elif move == Cube.Move.L:
             # Rotate the cube 180 degrees around the UP-DOWN axis.
@@ -123,7 +130,7 @@ class Cube:
             for face in [Cube.__LEFT, Cube.__FRONT, Cube.__RIGHT, Cube.__BACK]:
                 for col in range(3):
                     cell = self.__cubeRepr[face][row][col]
-                    print(f" {self.__colorMapping[cell]}{row}{col}", end="")
+                    print(f" {Fore.BLACK}{self.__colorMapping[cell]}{row}{col}", end="")
                 print(" |", end="")
             print()
         print()
@@ -179,6 +186,6 @@ if __name__ == "__main__":
 
     a = Cube()
     a.draw()
-    # a.turn(Cube.Move.F)
-    # a.turn(Cube.Move.R)
+    a.turn(Cube.Move.B)
+    a.turn(Cube.Move.L)
     a.draw()
