@@ -97,7 +97,7 @@ class Cube:
             self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1] = self.__cubeRepr[Cube.__DOWN][0][1], self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0]
             self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0] = self.__cubeRepr[Cube.__DOWN][0][0], self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0]
 
-        # Take advantage of FRONT-BACK symmetry to reuse the F code. See code for R.
+        # Take advantage of FRONT-BACK symmetry to reuse the F code. See code for L.
         elif move == Cube.Move.B:
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
             self.turn(Cube.Move.F)
@@ -123,7 +123,7 @@ class Cube:
             self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.Normal)
             self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:] = self.__cubeRepr[Cube.__RIGHT][0][:], self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:]
         
-        # Take advantage of RIGHT-LEFT symmetry to reuse the U code. See code for R.
+        # Take advantage of RIGHT-LEFT symmetry to reuse the U code. See code for L.
         elif move == Cube.Move.D:
             self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
             self.turn(Cube.Move.U)
@@ -135,10 +135,22 @@ class Cube:
             self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1] = self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1], self.__cubeRepr[Cube.__LEFT][1][2]
             self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0] = self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0], self.__cubeRepr[Cube.__LEFT][0][2]
 
-        # Take advantage of FRONT-BACK symmetry to reuse the F_ code. See code for R.
+        # Take advantage of FRONT-BACK symmetry to reuse the F_ code. See code for L.
         elif move == Cube.Move.B_:
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
             self.turn(Cube.Move.F_)
+            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
+
+        elif move == Cube.Move.R_:
+            self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.Prime)
+            self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__DOWN][2][2] = self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__DOWN][2][2], self.__cubeRepr[Cube.__FRONT][2][2]
+            self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2] = self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2], self.__cubeRepr[Cube.__FRONT][1][2]
+            self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__FRONT][0][2]
+
+        # Take advantage of RIGHT-LEFT symmetry to reuse the R_ code. See code for L.
+        elif move == Cube.Move.L_:
+            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
+            self.turn(Cube.Move.R_)
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
 
 
@@ -216,6 +228,6 @@ if __name__ == "__main__":
 
     a = Cube()
     a.draw()
-    # a.turn(Cube.Move.F)
-    a.turn(Cube.Move.B_)
+    a.turn(Cube.Move.L_)
+    a.turn(Cube.Move.L)
     a.draw()
