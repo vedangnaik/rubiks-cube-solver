@@ -60,11 +60,18 @@ class Cube:
             # Then, 180 rotate UP and DOWN.
             self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.OneEighty)
             self.__rotateFace(self.__cubeRepr[Cube.__DOWN], Cube.__Direction.OneEighty)
-
         elif axis == Cube.__Axis.RIGHT_LEFT:
-            pass
+            # First, swap UP-DOWN
+            self.__cubeRepr[Cube.__UP], self.__cubeRepr[Cube.__DOWN] = self.__cubeRepr[Cube.__DOWN], self.__cubeRepr[Cube.__UP]
+            # Then, swap FRONT-BACK and rotate both by 180 - In this coordinate system, FRONT and BACK are only symmetric about UP_DOWN, not RIGHT_LEFT.
+            self.__cubeRepr[Cube.__FRONT], self.__cubeRepr[Cube.__BACK] = self.__cubeRepr[Cube.__BACK], self.__cubeRepr[Cube.__FRONT]
+            self.__rotateFace(self.__cubeRepr[Cube.__FRONT], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.__cubeRepr[Cube.__BACK], Cube.__Direction.OneEighty)
+            # Then, 180 rotate RIGHT and LEFT.
+            self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.__cubeRepr[Cube.__LEFT], Cube.__Direction.OneEighty)
         elif axis == Cube.__Axis.FRONT_BACK:
-            pass
+            print("FRONT_BACK is an unused flip axis.")
 
 
     def __rotateFace(self, face, dir):
@@ -102,12 +109,6 @@ class Cube:
             self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2] = self.__cubeRepr[Cube.__DOWN][1][2], self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0]
             self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0]
 
-        # Take advantage of FRONT-BACK symmetry to reuse the F code. See code for R.
-        elif move == Cube.Move.B:
-            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
-            self.turn(Cube.Move.F)
-            self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
-
         # Take advantage of RIGHT-LEFT symmetry to reuse the R code.
         elif move == Cube.Move.L:
             # Rotate the cube 180 degrees around the UP-DOWN axis.
@@ -116,6 +117,17 @@ class Cube:
             self.turn(Cube.Move.R)
             # Undo the flip by flipping again
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
+
+        # Since this goes across the rows, we can exploit whole-row swapping to keep this clean.
+        elif move == Cube.Move.U:
+            self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.Normal)
+            self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:] = self.__cubeRepr[Cube.__RIGHT][0][:], self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:]
+        
+        # Take advantage of RIGHT-LEFT symmetry to reuse the U code. See code for R.
+        elif move == Cube.Move.D:
+            self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
+            self.turn(Cube.Move.U)
+            self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
 
 
     def draw(self):
@@ -193,5 +205,5 @@ if __name__ == "__main__":
     a = Cube()
     a.draw()
     a.turn(Cube.Move.B)
-    a.turn(Cube.Move.L)
+    a.turn(Cube.Move.D)
     a.draw()
