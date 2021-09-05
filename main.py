@@ -50,7 +50,10 @@ class Cube:
             self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__TOP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__BOTTOM][0][0] = self.__cubeRepr[Cube.__BOTTOM][0][0], self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__TOP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0]
         elif move == Cube.Move.R:
             self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.Normal)
-            
+
+            self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__TOP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__BOTTOM][2][2] = self.__cubeRepr[Cube.__BOTTOM][2][2], self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__TOP][2][2], self.__cubeRepr[Cube.__BACK][0][0]
+            self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__TOP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__BOTTOM][1][2] = self.__cubeRepr[Cube.__BOTTOM][1][2], self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__TOP][1][2], self.__cubeRepr[Cube.__BACK][1][0]
+            self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__TOP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__BOTTOM][0][2] = self.__cubeRepr[Cube.__BOTTOM][0][2], self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__TOP][0][2], self.__cubeRepr[Cube.__BACK][2][0]
 
     def draw(self):
         # Top Padding
