@@ -153,6 +153,16 @@ class Cube:
             self.turn(Cube.Move.R_)
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
 
+        elif move == Cube.Move.U_:
+            self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.Prime)
+            self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:] = self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:], self.__cubeRepr[Cube.__FRONT][0][:]
+        
+        # Take advantage of RIGHT-LEFT symmetry to reuse the U_ code. See code for L.
+        elif move == Cube.Move.D_:
+            self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
+            self.turn(Cube.Move.U_)
+            self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
+
 
     def draw(self):
         print()
@@ -228,6 +238,6 @@ if __name__ == "__main__":
 
     a = Cube()
     a.draw()
-    a.turn(Cube.Move.L_)
-    a.turn(Cube.Move.L)
+    a.turn(Cube.Move.D_)
+    a.turn(Cube.Move.D)
     a.draw()
