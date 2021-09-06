@@ -270,14 +270,14 @@ whiteCrossMoves = [
     ((Cube.RIGHT, 2, 1), (Cube.DOWN, 1, 2), [Cube.Move.R2, Cube.Move.U, Cube.Move.F2]),
     ((Cube.DOWN, 1, 2), (Cube.RIGHT, 2, 1), [Cube.Move.R, Cube.Move.F]),
     ((Cube.BACK, 2, 1), (Cube.DOWN, 2, 1), [Cube.Move.B2, Cube.Move.U2, Cube.Move.F2]),
-    ((Cube.DOWN, 2, 1), (Cube.BACK, 2, 1), [Cube.Move.B, Cube.Move.R2, Cube.Move.F, Cube.Move.R2]),
+    ((Cube.DOWN, 2, 1), (Cube.BACK, 2, 1), [Cube.Move.B, Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.F2]),
     ((Cube.LEFT, 2, 1), (Cube.DOWN, 1, 0), [Cube.Move.L2, Cube.Move.U_, Cube.Move.F2]),
-    ((Cube.DOWN, 1, 0), (Cube.LEFT, 2, 1), [Cube.Move.L, Cube.Move.F_]),
+    ((Cube.DOWN, 1, 0), (Cube.LEFT, 2, 1), [Cube.Move.L_, Cube.Move.F_, Cube.Move.L]),
     # Middle layer edges.
     ((Cube.FRONT, 1, 2), (Cube.RIGHT, 1, 0), [Cube.Move.F]),
-    ((Cube.FRONT, 1, 2), (Cube.RIGHT, 1, 0), [Cube.Move.R, Cube.Move.U, Cube.Move.R_, Cube.Move.F2]),
-    ((Cube.LEFT, 1, 2), (Cube.BACK, 1, 0), [Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.F2]),
-    ((Cube.BACK, 1, 0), (Cube.LEFT, 1, 2), [Cube.Move.R2, Cube.Move.F, Cube.Move.R2]),
+    ((Cube.RIGHT, 1, 0), (Cube.FRONT, 1, 2), [Cube.Move.R, Cube.Move.U, Cube.Move.R_, Cube.Move.F2]),
+    ((Cube.RIGHT, 1, 2), (Cube.BACK, 1, 0), [Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.F2]),
+    ((Cube.BACK, 1, 0), (Cube.RIGHT, 1, 2), [Cube.Move.R2, Cube.Move.F, Cube.Move.R2]),
     ((Cube.BACK, 1, 2), (Cube.LEFT, 1, 0), [Cube.Move.B_, Cube.Move.U2, Cube.Move.B, Cube.Move.F2]),
     ((Cube.LEFT, 1, 0), (Cube.BACK, 1, 2), [Cube.Move.L, Cube.Move.U_, Cube.Move.L_, Cube.Move.F2]),
     ((Cube.LEFT, 1, 2), (Cube.FRONT, 1, 0), [Cube.Move.L_, Cube.Move.U_, Cube.Move.L, Cube.Move.F2]),
@@ -299,19 +299,15 @@ if __name__ == "__main__":
     init(autoreset=True)
 
     a = Cube()
+    for test in range(10000):
+        print(test)
+        for _ in range(random.randint(10, 65)):
+            a.turn(random.choice(list(Cube.Move)))
 
-    print("Starting:")
-    a.draw()
+        for ((redFace, redRow, redCol), (whiteFace, whiteRow, whiteCol), movesList) in whiteCrossMoves:
+            if a.cubeRepr[redFace][redRow][redCol] == 'r' and a.cubeRepr[whiteFace][whiteRow][whiteCol] == 'w':
+                for move in movesList:
+                    a.turn(move)
+                break
 
-    print("Scrambling:")    
-    moves = [Cube.Move.D2]#, Cube.Move.R, Cube.Move.F, Cube.Move.D]
-    for move in moves:
-        a.turn(move)
-    a.draw()
-
-    print("White cross: ")
-    for ((redFace, redRow, redCol), (whiteFace, whiteRow, whiteCol), movesList) in whiteCrossMoves:
-        if a.cubeRepr[redFace][redRow][redCol] == 'r' and a.cubeRepr[whiteFace][whiteRow][whiteCol] == 'w':
-            for move in movesList:
-                a.turn(move)
-    a.draw()
+        assert(a.cubeRepr[Cube.FRONT][2][1] == 'r' and a.cubeRepr[Cube.DOWN][0][1] == 'w')
