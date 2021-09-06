@@ -1,7 +1,5 @@
-from colorama import Back, init, Style, Fore
+from colorama import Back, init, Fore
 from enum import Enum
-
-from colorama.initialise import reset_all
 
 class Cube:
     # Map of cube colours to codes for colorama.
@@ -47,33 +45,33 @@ class Cube:
         RIGHT_LEFT = 2
         FRONT_BACK = 3
 
-    # Face numbers. An enum is too inconvenient.
-    __FRONT = 0
-    __RIGHT = 1
-    __BACK = 2
-    __LEFT = 3
-    __UP = 4
-    __DOWN = 5
+    # Face numbers. An enum is too inconvenient since we only need the numbers.
+    FRONT = 0
+    RIGHT = 1
+    BACK = 2
+    LEFT = 3
+    UP = 4
+    DOWN = 5
 
     # Flips cubes (i.e. rotates 180 degrees) about given axis. Mainly used to exploit symmetries and reuse code in self.turn.
     def __flipCubeAcrossAxis(self, axis):
         if axis == Cube.__Axis.UP_DOWN:
             # First, swap FRONT-BACK and RIGHT-LEFT
-            self.__cubeRepr[Cube.__FRONT], self.__cubeRepr[Cube.__BACK] = self.__cubeRepr[Cube.__BACK], self.__cubeRepr[Cube.__FRONT]
-            self.__cubeRepr[Cube.__RIGHT], self.__cubeRepr[Cube.__LEFT] = self.__cubeRepr[Cube.__LEFT], self.__cubeRepr[Cube.__RIGHT]
+            self.cubeRepr[Cube.FRONT], self.cubeRepr[Cube.BACK] = self.cubeRepr[Cube.BACK], self.cubeRepr[Cube.FRONT]
+            self.cubeRepr[Cube.RIGHT], self.cubeRepr[Cube.LEFT] = self.cubeRepr[Cube.LEFT], self.cubeRepr[Cube.RIGHT]
             # Then, 180 rotate UP and DOWN.
-            self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.OneEighty)
-            self.__rotateFace(self.__cubeRepr[Cube.__DOWN], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.cubeRepr[Cube.UP], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.cubeRepr[Cube.DOWN], Cube.__Direction.OneEighty)
         elif axis == Cube.__Axis.RIGHT_LEFT:
             # First, swap UP-DOWN
-            self.__cubeRepr[Cube.__UP], self.__cubeRepr[Cube.__DOWN] = self.__cubeRepr[Cube.__DOWN], self.__cubeRepr[Cube.__UP]
+            self.cubeRepr[Cube.UP], self.cubeRepr[Cube.DOWN] = self.cubeRepr[Cube.DOWN], self.cubeRepr[Cube.UP]
             # Then, swap FRONT-BACK and rotate both by 180 - In this coordinate system, FRONT and BACK are only symmetric about UP_DOWN, not RIGHT_LEFT.
-            self.__cubeRepr[Cube.__FRONT], self.__cubeRepr[Cube.__BACK] = self.__cubeRepr[Cube.__BACK], self.__cubeRepr[Cube.__FRONT]
-            self.__rotateFace(self.__cubeRepr[Cube.__FRONT], Cube.__Direction.OneEighty)
-            self.__rotateFace(self.__cubeRepr[Cube.__BACK], Cube.__Direction.OneEighty)
+            self.cubeRepr[Cube.FRONT], self.cubeRepr[Cube.BACK] = self.cubeRepr[Cube.BACK], self.cubeRepr[Cube.FRONT]
+            self.__rotateFace(self.cubeRepr[Cube.FRONT], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.cubeRepr[Cube.BACK], Cube.__Direction.OneEighty)
             # Then, 180 rotate RIGHT and LEFT.
-            self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.OneEighty)
-            self.__rotateFace(self.__cubeRepr[Cube.__LEFT], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.cubeRepr[Cube.RIGHT], Cube.__Direction.OneEighty)
+            self.__rotateFace(self.cubeRepr[Cube.LEFT], Cube.__Direction.OneEighty)
         elif axis == Cube.__Axis.FRONT_BACK:
             print("FRONT_BACK is an unused flip axis.")
 
@@ -97,10 +95,10 @@ class Cube:
     # Main function which implement the cube moves. Probably can be cleaned up more with the bitboard representation, but it's fine for now.
     def turn(self, move):
         if move == Cube.Move.F:
-            self.__rotateFace(self.__cubeRepr[Cube.__FRONT], Cube.__Direction.Normal)
-            self.__cubeRepr[Cube.__LEFT][2][2], self.__cubeRepr[Cube.__UP][2][0], self.__cubeRepr[Cube.__RIGHT][0][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__LEFT][2][2], self.__cubeRepr[Cube.__UP][2][0], self.__cubeRepr[Cube.__RIGHT][0][0]
-            self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1] = self.__cubeRepr[Cube.__DOWN][0][1], self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0]
-            self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0] = self.__cubeRepr[Cube.__DOWN][0][0], self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0]
+            self.__rotateFace(self.cubeRepr[Cube.FRONT], Cube.__Direction.Normal)
+            self.cubeRepr[Cube.LEFT][2][2], self.cubeRepr[Cube.UP][2][0], self.cubeRepr[Cube.RIGHT][0][0], self.cubeRepr[Cube.DOWN][0][2] = self.cubeRepr[Cube.DOWN][0][2], self.cubeRepr[Cube.LEFT][2][2], self.cubeRepr[Cube.UP][2][0], self.cubeRepr[Cube.RIGHT][0][0]
+            self.cubeRepr[Cube.LEFT][1][2], self.cubeRepr[Cube.UP][2][1], self.cubeRepr[Cube.RIGHT][1][0], self.cubeRepr[Cube.DOWN][0][1] = self.cubeRepr[Cube.DOWN][0][1], self.cubeRepr[Cube.LEFT][1][2], self.cubeRepr[Cube.UP][2][1], self.cubeRepr[Cube.RIGHT][1][0]
+            self.cubeRepr[Cube.LEFT][0][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.RIGHT][2][0], self.cubeRepr[Cube.DOWN][0][0] = self.cubeRepr[Cube.DOWN][0][0], self.cubeRepr[Cube.LEFT][0][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.RIGHT][2][0]
 
         # Take advantage of FRONT-BACK symmetry to reuse the F code. See code for L.
         elif move == Cube.Move.B:
@@ -109,10 +107,10 @@ class Cube:
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
 
         elif move == Cube.Move.R:
-            self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.Normal)
-            self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__DOWN][2][2] = self.__cubeRepr[Cube.__DOWN][2][2], self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0]
-            self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2] = self.__cubeRepr[Cube.__DOWN][1][2], self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0]
-            self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0]
+            self.__rotateFace(self.cubeRepr[Cube.RIGHT], Cube.__Direction.Normal)
+            self.cubeRepr[Cube.FRONT][2][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.BACK][0][0], self.cubeRepr[Cube.DOWN][2][2] = self.cubeRepr[Cube.DOWN][2][2], self.cubeRepr[Cube.FRONT][2][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.BACK][0][0]
+            self.cubeRepr[Cube.FRONT][1][2], self.cubeRepr[Cube.UP][1][2], self.cubeRepr[Cube.BACK][1][0], self.cubeRepr[Cube.DOWN][1][2] = self.cubeRepr[Cube.DOWN][1][2], self.cubeRepr[Cube.FRONT][1][2], self.cubeRepr[Cube.UP][1][2], self.cubeRepr[Cube.BACK][1][0]
+            self.cubeRepr[Cube.FRONT][0][2], self.cubeRepr[Cube.UP][0][2], self.cubeRepr[Cube.BACK][2][0], self.cubeRepr[Cube.DOWN][0][2] = self.cubeRepr[Cube.DOWN][0][2], self.cubeRepr[Cube.FRONT][0][2], self.cubeRepr[Cube.UP][0][2], self.cubeRepr[Cube.BACK][2][0]
 
         # Take advantage of RIGHT-LEFT symmetry to reuse the R code.
         elif move == Cube.Move.L:
@@ -125,8 +123,8 @@ class Cube:
 
         # Since this goes across the rows, we can exploit whole-row swapping to keep this clean.
         elif move == Cube.Move.U:
-            self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.Normal)
-            self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:] = self.__cubeRepr[Cube.__RIGHT][0][:], self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:]
+            self.__rotateFace(self.cubeRepr[Cube.UP], Cube.__Direction.Normal)
+            self.cubeRepr[Cube.FRONT][0][:], self.cubeRepr[Cube.LEFT][0][:], self.cubeRepr[Cube.BACK][0][:], self.cubeRepr[Cube.RIGHT][0][:] = self.cubeRepr[Cube.RIGHT][0][:], self.cubeRepr[Cube.FRONT][0][:], self.cubeRepr[Cube.LEFT][0][:], self.cubeRepr[Cube.BACK][0][:]
         
         # Take advantage of RIGHT-LEFT symmetry to reuse the U code. See code for L.
         elif move == Cube.Move.D:
@@ -135,10 +133,10 @@ class Cube:
             self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
 
         if move == Cube.Move.F_:
-            self.__rotateFace(self.__cubeRepr[Cube.__FRONT], Cube.__Direction.Prime)
-            self.__cubeRepr[Cube.__LEFT][2][2], self.__cubeRepr[Cube.__UP][2][0], self.__cubeRepr[Cube.__RIGHT][0][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__UP][2][0], self.__cubeRepr[Cube.__RIGHT][0][0], self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__LEFT][2][2]
-            self.__cubeRepr[Cube.__LEFT][1][2], self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1] = self.__cubeRepr[Cube.__UP][2][1], self.__cubeRepr[Cube.__RIGHT][1][0], self.__cubeRepr[Cube.__DOWN][0][1], self.__cubeRepr[Cube.__LEFT][1][2]
-            self.__cubeRepr[Cube.__LEFT][0][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0] = self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__RIGHT][2][0], self.__cubeRepr[Cube.__DOWN][0][0], self.__cubeRepr[Cube.__LEFT][0][2]
+            self.__rotateFace(self.cubeRepr[Cube.FRONT], Cube.__Direction.Prime)
+            self.cubeRepr[Cube.LEFT][2][2], self.cubeRepr[Cube.UP][2][0], self.cubeRepr[Cube.RIGHT][0][0], self.cubeRepr[Cube.DOWN][0][2] = self.cubeRepr[Cube.UP][2][0], self.cubeRepr[Cube.RIGHT][0][0], self.cubeRepr[Cube.DOWN][0][2], self.cubeRepr[Cube.LEFT][2][2]
+            self.cubeRepr[Cube.LEFT][1][2], self.cubeRepr[Cube.UP][2][1], self.cubeRepr[Cube.RIGHT][1][0], self.cubeRepr[Cube.DOWN][0][1] = self.cubeRepr[Cube.UP][2][1], self.cubeRepr[Cube.RIGHT][1][0], self.cubeRepr[Cube.DOWN][0][1], self.cubeRepr[Cube.LEFT][1][2]
+            self.cubeRepr[Cube.LEFT][0][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.RIGHT][2][0], self.cubeRepr[Cube.DOWN][0][0] = self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.RIGHT][2][0], self.cubeRepr[Cube.DOWN][0][0], self.cubeRepr[Cube.LEFT][0][2]
 
         # Take advantage of FRONT-BACK symmetry to reuse the F_ code. See code for L.
         elif move == Cube.Move.B_:
@@ -147,10 +145,10 @@ class Cube:
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
 
         elif move == Cube.Move.R_:
-            self.__rotateFace(self.__cubeRepr[Cube.__RIGHT], Cube.__Direction.Prime)
-            self.__cubeRepr[Cube.__FRONT][2][2], self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__DOWN][2][2] = self.__cubeRepr[Cube.__UP][2][2], self.__cubeRepr[Cube.__BACK][0][0], self.__cubeRepr[Cube.__DOWN][2][2], self.__cubeRepr[Cube.__FRONT][2][2]
-            self.__cubeRepr[Cube.__FRONT][1][2], self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2] = self.__cubeRepr[Cube.__UP][1][2], self.__cubeRepr[Cube.__BACK][1][0], self.__cubeRepr[Cube.__DOWN][1][2], self.__cubeRepr[Cube.__FRONT][1][2]
-            self.__cubeRepr[Cube.__FRONT][0][2], self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2] = self.__cubeRepr[Cube.__UP][0][2], self.__cubeRepr[Cube.__BACK][2][0], self.__cubeRepr[Cube.__DOWN][0][2], self.__cubeRepr[Cube.__FRONT][0][2]
+            self.__rotateFace(self.cubeRepr[Cube.RIGHT], Cube.__Direction.Prime)
+            self.cubeRepr[Cube.FRONT][2][2], self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.BACK][0][0], self.cubeRepr[Cube.DOWN][2][2] = self.cubeRepr[Cube.UP][2][2], self.cubeRepr[Cube.BACK][0][0], self.cubeRepr[Cube.DOWN][2][2], self.cubeRepr[Cube.FRONT][2][2]
+            self.cubeRepr[Cube.FRONT][1][2], self.cubeRepr[Cube.UP][1][2], self.cubeRepr[Cube.BACK][1][0], self.cubeRepr[Cube.DOWN][1][2] = self.cubeRepr[Cube.UP][1][2], self.cubeRepr[Cube.BACK][1][0], self.cubeRepr[Cube.DOWN][1][2], self.cubeRepr[Cube.FRONT][1][2]
+            self.cubeRepr[Cube.FRONT][0][2], self.cubeRepr[Cube.UP][0][2], self.cubeRepr[Cube.BACK][2][0], self.cubeRepr[Cube.DOWN][0][2] = self.cubeRepr[Cube.UP][0][2], self.cubeRepr[Cube.BACK][2][0], self.cubeRepr[Cube.DOWN][0][2], self.cubeRepr[Cube.FRONT][0][2]
 
         # Take advantage of RIGHT-LEFT symmetry to reuse the R_ code. See code for L.
         elif move == Cube.Move.L_:
@@ -159,8 +157,8 @@ class Cube:
             self.__flipCubeAcrossAxis(Cube.__Axis.UP_DOWN)
 
         elif move == Cube.Move.U_:
-            self.__rotateFace(self.__cubeRepr[Cube.__UP], Cube.__Direction.Prime)
-            self.__cubeRepr[Cube.__FRONT][0][:], self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:] = self.__cubeRepr[Cube.__LEFT][0][:], self.__cubeRepr[Cube.__BACK][0][:], self.__cubeRepr[Cube.__RIGHT][0][:], self.__cubeRepr[Cube.__FRONT][0][:]
+            self.__rotateFace(self.cubeRepr[Cube.UP], Cube.__Direction.Prime)
+            self.cubeRepr[Cube.FRONT][0][:], self.cubeRepr[Cube.LEFT][0][:], self.cubeRepr[Cube.BACK][0][:], self.cubeRepr[Cube.RIGHT][0][:] = self.cubeRepr[Cube.LEFT][0][:], self.cubeRepr[Cube.BACK][0][:], self.cubeRepr[Cube.RIGHT][0][:], self.cubeRepr[Cube.FRONT][0][:]
         
         # Take advantage of RIGHT-LEFT symmetry to reuse the U_ code. See code for L.
         elif move == Cube.Move.D_:
@@ -201,7 +199,7 @@ class Cube:
         for row in range(3):
             print(13 * " ", end="")
             for col in range(3):
-                cell = self.__cubeRepr[Cube.__UP][row][col]
+                cell = self.cubeRepr[Cube.UP][row][col]
                 print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
             print(" ")
         print()
@@ -209,9 +207,9 @@ class Cube:
         # First row of L, F, R, B faces
         for row in range(3):
             print("| ", end="")
-            for face in [Cube.__LEFT, Cube.__FRONT, Cube.__RIGHT, Cube.__BACK]:
+            for face in [Cube.LEFT, Cube.FRONT, Cube.RIGHT, Cube.BACK]:
                 for col in range(3):
-                    cell = self.__cubeRepr[face][row][col]
+                    cell = self.cubeRepr[face][row][col]
                     print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
                 print(" |", end="")
             print()
@@ -221,7 +219,7 @@ class Cube:
         for row in range(3):
             print(13 * " ", end="")
             for col in range(3):
-                cell = self.__cubeRepr[Cube.__DOWN][row][col]
+                cell = self.cubeRepr[Cube.DOWN][row][col]
                 print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
             print(" ")
         print()
@@ -229,7 +227,7 @@ class Cube:
 
     # Constructor. Sets up the initial state as the cube being solved, with F = red face, U = yellow face, and D = white face.
     def __init__(self):
-        self.__cubeRepr = [
+        self.cubeRepr = [
             [
                 ['r', 'r', 'r'],
                 ['r', 'r', 'r'],
