@@ -4,7 +4,8 @@ from enum import Enum
 from colorama.initialise import reset_all
 
 class Cube:
-    __colorMapping = {
+    # Map of cube colours to codes for colorama.
+    __colorMap = {
         'r': Back.RED,
         'g': Back.GREEN,
         'o': Back.MAGENTA, # No orange :(
@@ -13,6 +14,7 @@ class Cube:
         'w': Back.WHITE,
     }
 
+    # Enum of the 18 cube moves.
     class Move(Enum):
         F = 1
         F_ = 2
@@ -33,11 +35,13 @@ class Cube:
         D_ = 17
         D2 = 18
 
+    # Direction enum mainly for self.__rotateFace. Normal = clockwise, Prime = anticlockwise, OneEighty = half-turn.
     class __Direction(Enum):
         Normal = 1
         Prime = 2
         OneEighty = 3
 
+    # Axis anum mainly for self.__flipCubeAcrossAxis. Axis name indicates the faces that axis goes through.
     class __Axis(Enum):
         UP_DOWN = 1
         RIGHT_LEFT = 2
@@ -51,7 +55,7 @@ class Cube:
     __UP = 4
     __DOWN = 5
 
-
+    # Flips cubes (i.e. rotates 180 degrees) about given axis. Mainly used to exploit symmetries and reuse code in self.turn.
     def __flipCubeAcrossAxis(self, axis):
         if axis == Cube.__Axis.UP_DOWN:
             # First, swap FRONT-BACK and RIGHT-LEFT
@@ -73,7 +77,7 @@ class Cube:
         elif axis == Cube.__Axis.FRONT_BACK:
             print("FRONT_BACK is an unused flip axis.")
 
-
+    # Rotates face colors only (not edge/corner colors) for the given face in the given direction.
     def __rotateFace(self, face, dir):
         if dir == Cube.__Direction.Normal:
             # Rotate corners, then edges. The center is fixed.
@@ -90,6 +94,7 @@ class Cube:
             face[1][0], face[1][2] = face[1][2], face[1][0]
             face[0][1], face[2][1] = face[2][1], face[0][1]
 
+    # Main function which implement the cube moves. Probably can be cleaned up more with the bitboard representation, but it's fine for now.
     def turn(self, move):
         if move == Cube.Move.F:
             self.__rotateFace(self.__cubeRepr[Cube.__FRONT], Cube.__Direction.Normal)
@@ -187,6 +192,8 @@ class Cube:
         elif move == Cube.Move.D2:
             self.turn(Cube.Move.D)
             self.turn(Cube.Move.D)
+
+    # Prints a colored 'net' of the cube. See https://ell.stackexchange.com/questions/222545/what-is-this-opened-cube-called for what that means. Orange is not available in colorama, so magenta is used instead.
     def draw(self):
         print()
 
@@ -195,7 +202,7 @@ class Cube:
             print(13 * " ", end="")
             for col in range(3):
                 cell = self.__cubeRepr[Cube.__UP][row][col]
-                print(f" {Fore.BLACK}{self.__colorMapping[cell]}{row}{col}", end="")
+                print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
             print(" ")
         print()
 
@@ -205,7 +212,7 @@ class Cube:
             for face in [Cube.__LEFT, Cube.__FRONT, Cube.__RIGHT, Cube.__BACK]:
                 for col in range(3):
                     cell = self.__cubeRepr[face][row][col]
-                    print(f" {Fore.BLACK}{self.__colorMapping[cell]}{row}{col}", end="")
+                    print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
                 print(" |", end="")
             print()
         print()
@@ -215,11 +222,12 @@ class Cube:
             print(13 * " ", end="")
             for col in range(3):
                 cell = self.__cubeRepr[Cube.__DOWN][row][col]
-                print(f" {Fore.BLACK}{self.__colorMapping[cell]}{row}{col}", end="")
+                print(f" {Fore.BLACK}{self.__colorMap[cell]}{row}{col}", end="")
             print(" ")
         print()
         print()
 
+    # Constructor. Sets up the initial state as the cube being solved, with F = red face, U = yellow face, and D = white face.
     def __init__(self):
         self.__cubeRepr = [
             [
@@ -261,6 +269,6 @@ if __name__ == "__main__":
 
     a = Cube()
     a.draw()
-    a.turn(Cube.Move.D_)
-    a.turn(Cube.Move.D)
+    a.turn(Cube.Move.F2)
+    a.turn(Cube.Move.F2)
     a.draw()
