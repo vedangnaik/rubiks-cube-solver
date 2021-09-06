@@ -163,7 +163,30 @@ class Cube:
             self.turn(Cube.Move.U_)
             self.__flipCubeAcrossAxis(Cube.__Axis.RIGHT_LEFT)
 
+        # Just do the base move two times.
+        elif move == Cube.Move.F2:
+            self.turn(Cube.Move.F)
+            self.turn(Cube.Move.F)
 
+        elif move == Cube.Move.B2:
+            self.turn(Cube.Move.B)
+            self.turn(Cube.Move.B)
+
+        elif move == Cube.Move.R2:
+            self.turn(Cube.Move.R)
+            self.turn(Cube.Move.R)
+
+        elif move == Cube.Move.L2:
+            self.turn(Cube.Move.L)
+            self.turn(Cube.Move.L)
+
+        elif move == Cube.Move.U2:
+            self.turn(Cube.Move.U)
+            self.turn(Cube.Move.U)
+
+        elif move == Cube.Move.D2:
+            self.turn(Cube.Move.D)
+            self.turn(Cube.Move.D)
     def draw(self):
         print()
 
