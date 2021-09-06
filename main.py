@@ -262,11 +262,30 @@ class Cube:
 
 
 
+whiteCrossMoves = [
+    ((Cube.FRONT, 2, 1), (Cube.DOWN, 0, 1), []),
+    ((Cube.DOWN, 0, 1), (Cube.FRONT, 2, 1), [Cube.Move.F_, Cube.Move.D, Cube.Move.R_, Cube.Move.D_])
+]
+
+
 if __name__ == "__main__":
+    import random
     init(autoreset=True)
 
     a = Cube()
+
+    print("Starting:")
     a.draw()
-    a.turn(Cube.Move.F2)
-    a.turn(Cube.Move.F2)
+
+    print("Scrambling:")    
+    moves = [Cube.Move.D, Cube.Move.R, Cube.Move.D_, Cube.Move.F]
+    for move in moves:
+        a.turn(move)
+    a.draw()
+
+    print("White cross: ")
+    for ((redFace, redRow, redCol), (whiteFace, whiteRow, whiteCol), movesList) in whiteCrossMoves:
+        if a.cubeRepr[redFace][redRow][redCol] == 'r' and a.cubeRepr[whiteFace][whiteRow][whiteCol] == 'w':
+            for move in movesList:
+                a.turn(move)
     a.draw()
