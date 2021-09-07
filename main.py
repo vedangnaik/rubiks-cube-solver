@@ -40,3 +40,8 @@ if __name__ == "__main__":
         assert(a.cubeRepr[Cube.UP][1][0] == 'y')
         assert(a.cubeRepr[Cube.UP][1][2] == 'y')
         assert(a.cubeRepr[Cube.UP][2][1] == 'y')
+
+        assert(a.cubeRepr[Cube.UP][0][0] == 'y')
+        assert(a.cubeRepr[Cube.UP][0][2] == 'y')
+        assert(a.cubeRepr[Cube.UP][2][0] == 'y')
+        assert(a.cubeRepr[Cube.UP][2][2] == 'y')

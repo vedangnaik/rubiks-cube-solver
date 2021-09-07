@@ -91,14 +91,27 @@ class CFOPSolver(Solver):
         ((Cube.UP, 0, 1), (Cube.BACK, 0, 1), [F_, U, F, U, R, U_, R_]),
 
         ((Cube.LEFT, 0, 1), (Cube.UP, 1, 0), [R, U_, R_, U_, F_, U, F]),
-        ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [U, F_, U, F, U, R, U_, R_]),
+        ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [U, F_, U, F, U, R, U_, R_])
     ]
 
+    # The center is always yellow, so that's not included here.
     __OLLFirstLookMoves = [
         ([(Cube.UP, 0, 1), (Cube.UP, 1, 0), (Cube.UP, 1, 2), (Cube.UP, 2, 1)], []),
         ([(Cube.BACK, 0, 1), (Cube.LEFT, 0, 1), (Cube.UP, 1, 2), (Cube.UP, 2, 1)], [B, U, L, U_, L_, B_]),
         ([(Cube.BACK, 0, 1), (Cube.UP, 1, 0), (Cube.UP, 1, 2), (Cube.FRONT, 0, 1)], [F, R, U, R_, U_, F_]),
-        ([(Cube.BACK, 0, 1), (Cube.LEFT, 0, 1), (Cube.RIGHT, 0, 1), (Cube.FRONT, 0, 1)], [F, R, U, R_, U_, F_, B, U, L, U_, L_, B_, ]),
+        ([(Cube.BACK, 0, 1), (Cube.LEFT, 0, 1), (Cube.RIGHT, 0, 1), (Cube.FRONT, 0, 1)], [F, R, U, R_, U_, F_, B, U, L, U_, L_, B_])
+    ]
+
+    # The cross is already yellow, so that's not included here.
+    __OLLSecondLookMoves = [
+        ([(Cube.UP, 0, 0), (Cube.UP, 0, 2), (Cube.UP, 2, 0), (Cube.UP, 2, 2)], []),
+        ([(Cube.BACK, 0, 2), (Cube.RIGHT, 0, 2), (Cube.FRONT, 0, 2), (Cube.UP, 2, 0)], [R, U, R_, U, R, U2, R_]),
+        ([(Cube.BACK, 0, 0), (Cube.LEFT, 0, 0), (Cube.LEFT, 0, 2), (Cube.FRONT, 0, 2)], [R, U2, R2, U_, R2, U_, R2, U2, R]),
+        ([(Cube.BACK, 0, 2), (Cube.FRONT, 0, 0), (Cube.UP, 0, 2), (Cube.UP, 2, 2)], [L, F, R_, F_, L_, F, R, F_]),
+        ([(Cube.FRONT, 0, 0), (Cube.FRONT, 0, 2), (Cube.UP, 0, 0), (Cube.UP, 0, 2)], [R2, D, R_, U2, R, D_, R_, U2, R_]),
+        ([(Cube.UP, 0, 2), (Cube.LEFT, 0, 0), (Cube.FRONT, 0, 0), (Cube.RIGHT, 0, 0)], [R, U2, R_, U_, R, U_, R_]),
+        ([(Cube.BACK, 0, 2), (Cube.BACK, 0, 0), (Cube.FRONT, 0, 0), (Cube.FRONT, 0, 2)], [F, R, U, R_, U_, R, U, R_, U_, R, U, R_, U_, F_]),
+        ([(Cube.UP, 0, 2), (Cube.UP, 2, 0), (Cube.LEFT, 0, 0), (Cube.FRONT, 0, 2)], [F_, L, F, R_, F_, L_, F, R])
     ]
 
     def __createWhiteCross(self):
@@ -154,8 +167,31 @@ class CFOPSolver(Solver):
             # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
             self.cube.turn(Y)
 
+    def __performOLLSecondLook(self):
+        while(True):
+            for (yellowCoords, movesList) in self.__OLLSecondLookMoves:
+                patternFound = True
+                # Check if listed coords are all yellow.
+                for (yellowFace, yellowRow, yellowCol) in yellowCoords:
+                    if self.cube.cubeRepr[yellowFace][yellowRow][yellowCol] != 'y':
+                        patternFound = False
+                        break
+                # If they are, perform the moves, restore the cube, then return.
+                if patternFound:
+                    for move in movesList:
+                        self.cube.turn(move)
+                    # Rotate the cube so that red is front again.
+                    while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
+                        self.cube.turn(Y)
+                    return
+                # Else, continue checking the other patterns.
+            
+            # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
+            self.cube.turn(Y)
+
     def solve(self):
         self.__createWhiteCross()
         self.__placeBottomLayerCorners()
         self.__placeMiddleLayerEdges()
         self.__performOLLFirstLook()
+        self.__performOLLSecondLook()
