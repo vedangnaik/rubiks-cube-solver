@@ -170,9 +170,64 @@ class CFOPSolver(Solver):
         # Rotate the cube so that red is front again.
         while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
             self.cube.turn(Y)
+
+    def __permuteLastLayer(self):
+        # Keep repeating algo until a single pair of headlights appears.
+        headlightColor = ''
+        while headlightColor == '':
+            # Check the headlight cells of each layer to see if any exist at all.
+            if self.cube.cubeRepr[Cube.FRONT][0][0] == self.cube.cubeRepr[Cube.FRONT][0][2]:
+                headlightColor = self.cube.cubeRepr[Cube.FRONT][0][0]
+            elif self.cube.cubeRepr[Cube.RIGHT][0][0] == self.cube.cubeRepr[Cube.RIGHT][0][2]:
+                headlightColor = self.cube.cubeRepr[Cube.RIGHT][0][0]
+            elif self.cube.cubeRepr[Cube.BACK][0][0] == self.cube.cubeRepr[Cube.BACK][0][2]:
+                headlightColor = self.cube.cubeRepr[Cube.BACK][0][0]
+            elif self.cube.cubeRepr[Cube.LEFT][0][0] == self.cube.cubeRepr[Cube.LEFT][0][2]:
+                headlightColor = self.cube.cubeRepr[Cube.LEFT][0][0]
+            else:
+                for move in [R_, F, R_, B2, R, F_, R_, B2, R2]:
+                    self.cube.turn(move)
+
+        # Move the headlights to the back and repeat the algo until all corners are lined up.
+        while self.cube.cubeRepr[Cube.BACK][0][0] != headlightColor and self.cube.cubeRepr[Cube.BACK][0][2] != headlightColor:
+            self.cube.turn(U)
+        while not (self.cube.cubeRepr[Cube.FRONT][0][0] == self.cube.cubeRepr[Cube.FRONT][0][2] and \
+                self.cube.cubeRepr[Cube.RIGHT][0][0] == self.cube.cubeRepr[Cube.RIGHT][0][2] and \
+                self.cube.cubeRepr[Cube.BACK][0][0] == self.cube.cubeRepr[Cube.BACK][0][2] and \
+                self.cube.cubeRepr[Cube.LEFT][0][0] == self.cube.cubeRepr[Cube.LEFT][0][2]):
+            for move in [R_, F, R_, B2, R, F_, R_, B2, R2]:
+                self.cube.turn(move)
+        
+        # Now, keep repeating the algo until we create a solved edge.
+        solvedEdgeColor = ''
+        while solvedEdgeColor == '':
+            if self.cube.cubeRepr[Cube.FRONT][0][0] == self.cube.cubeRepr[Cube.FRONT][0][1] == self.cube.cubeRepr[Cube.FRONT][0][2]:
+                solvedEdgeColor = self.cube.cubeRepr[Cube.FRONT][0][0]
+            elif self.cube.cubeRepr[Cube.RIGHT][0][0] == self.cube.cubeRepr[Cube.RIGHT][0][1] == self.cube.cubeRepr[Cube.RIGHT][0][2]:
+                solvedEdgeColor = self.cube.cubeRepr[Cube.RIGHT][0][0]
+            elif self.cube.cubeRepr[Cube.BACK][0][0] == self.cube.cubeRepr[Cube.BACK][0][1] == self.cube.cubeRepr[Cube.BACK][0][2]:
+                solvedEdgeColor = self.cube.cubeRepr[Cube.BACK][0][0]
+            elif self.cube.cubeRepr[Cube.LEFT][0][0] == self.cube.cubeRepr[Cube.LEFT][0][1] == self.cube.cubeRepr[Cube.LEFT][0][2]:
+                solvedEdgeColor = self.cube.cubeRepr[Cube.LEFT][0][0]
+            else:
+                for move in [R, U_, R, U, R, U, R, U_, R_, U_, R2]:
+                    self.cube.turn(move)
+                
+        # Move the solved edge to the back and finish this.
+        while self.cube.cubeRepr[Cube.BACK][0][1] != solvedEdgeColor:
+            self.cube.turn(U)
+        while self.cube.cubeRepr[Cube.FRONT][0][0] != self.cube.cubeRepr[Cube.FRONT][0][1]:
+            for move in [R, U_, R, U, R, U, R, U_, R_, U_, R2]:
+                self.cube.turn(move)
+
+        # At this point, the top layer is solved. We only need to rotate it until it lines up correctly with the centers.
+        while self.cube.cubeRepr[Cube.FRONT][0][0] != 'r':
+            self.cube.turn(U)
             
+
     def solve(self):
         self.__createWhiteCross()
         self.__placeBottomLayerCorners()
         self.__placeMiddleLayerEdges()
         self.__orientLastLayer()
+        self.__permuteLastLayer()

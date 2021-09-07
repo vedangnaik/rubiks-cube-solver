@@ -21,27 +21,43 @@ if __name__ == "__main__":
         s.solve()
         # a.draw()
 
-        assert(a.cubeRepr[Cube.FRONT][2][1] == 'r' and a.cubeRepr[Cube.DOWN][0][1] == 'w')
-        assert(a.cubeRepr[Cube.RIGHT][2][1] == 'g' and a.cubeRepr[Cube.DOWN][1][2] == 'w')
-        assert(a.cubeRepr[Cube.BACK][2][1] == 'o' and a.cubeRepr[Cube.DOWN][2][1] == 'w')
-        assert(a.cubeRepr[Cube.LEFT][2][1] == 'b' and a.cubeRepr[Cube.DOWN][1][0] == 'w')
+        solvedCube = [
+            [
+                ['r', 'r', 'r'],
+                ['r', 'r', 'r'],
+                ['r', 'r', 'r'],
+            ],
+            [
+                ['g', 'g', 'g'],
+                ['g', 'g', 'g'],
+                ['g', 'g', 'g'],
+            ],
+            [
+                ['o', 'o', 'o'],
+                ['o', 'o', 'o'],
+                ['o', 'o', 'o'],
+            ],
+            [
+                ['b', 'b', 'b'],
+                ['b', 'b', 'b'],
+                ['b', 'b', 'b'],
+            ],
+            [
+                ['y', 'y', 'y'],
+                ['y', 'y', 'y'],
+                ['y', 'y', 'y'],
+            ],
+            [
+                ['w', 'w', 'w'],
+                ['w', 'w', 'w'],
+                ['w', 'w', 'w'],
+            ],
+        ]
 
-        assert(a.cubeRepr[Cube.FRONT][2][2] == 'r' and a.cubeRepr[Cube.RIGHT][2][0] == 'g' and a.cubeRepr[Cube.DOWN][0][2] == 'w')
-        assert(a.cubeRepr[Cube.RIGHT][2][2] == 'g' and a.cubeRepr[Cube.BACK][2][0] == 'o' and a.cubeRepr[Cube.DOWN][2][2] == 'w')
-        assert(a.cubeRepr[Cube.BACK][2][2] == 'o' and a.cubeRepr[Cube.LEFT][2][0] == 'b' and a.cubeRepr[Cube.DOWN][2][0] == 'w')
-        assert(a.cubeRepr[Cube.LEFT][2][2] == 'b' and a.cubeRepr[Cube.FRONT][2][0] == 'r' and a.cubeRepr[Cube.DOWN][0][0] == 'w')
-
-        assert(a.cubeRepr[Cube.FRONT][1][2] == 'r' and a.cubeRepr[Cube.RIGHT][1][0] == 'g')
-        assert(a.cubeRepr[Cube.RIGHT][1][2] == 'g' and a.cubeRepr[Cube.BACK][1][0] == 'o')
-        assert(a.cubeRepr[Cube.BACK][1][2] == 'o' and a.cubeRepr[Cube.LEFT][1][0] == 'b')
-        assert(a.cubeRepr[Cube.LEFT][1][2] == 'b' and a.cubeRepr[Cube.FRONT][1][0] == 'r')
-
-        assert(a.cubeRepr[Cube.UP][0][1] == 'y')
-        assert(a.cubeRepr[Cube.UP][1][0] == 'y')
-        assert(a.cubeRepr[Cube.UP][1][2] == 'y')
-        assert(a.cubeRepr[Cube.UP][2][1] == 'y')
-
-        assert(a.cubeRepr[Cube.UP][0][0] == 'y')
-        assert(a.cubeRepr[Cube.UP][0][2] == 'y')
-        assert(a.cubeRepr[Cube.UP][2][0] == 'y')
-        assert(a.cubeRepr[Cube.UP][2][2] == 'y')
+        solved = True
+        for face in range(6):
+            for row in range(3):
+                for col in range(3):
+                    if solvedCube[face][row][col] != a.cubeRepr[face][row][col]:
+                        solved = False
+        assert(solved)
