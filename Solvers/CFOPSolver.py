@@ -32,6 +32,12 @@ class CFOPSolver(Solver):
         ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [Cube.Move.L, Cube.Move.F_, Cube.Move.L_]),
     ]
 
+    __bottomLayerCornersMoves = [
+        ((Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), []),
+        ((Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), [Cube.Move.R, Cube.Move.U, Cube.Move.R_, Cube.Move.U_, Cube.Move.R, Cube.Move.U, Cube.Move.R_]),
+        ((Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), [Cube.Move.R, Cube.Move.U_, Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.U_, Cube.Move.R_]),
+    ]
+
     def __createWhiteCross(self):
         for edgeColor in ['r', 'g', 'o', 'b']:
             for ((edgeFace, edgeRow, edgeCol), (whiteFace, whiteRow, whiteCol), movesList) in self.__whiteCrossMoves:
@@ -41,5 +47,18 @@ class CFOPSolver(Solver):
                     break
             self.cube.turn(Cube.Move.Y)
 
+    def __placeBottomLayerCorners(self):
+        for (frontCornerColor, rightCornerColor) in [('r', 'g')]:
+            for ((frontFace, frontRow, frontCol), (rightFace, rightRow, rightCol), (downFace, downRow, downCol), movesList) in self.__bottomLayerCornersMoves:
+                if self.cube.cubeRepr[frontFace][frontRow][frontCol] == frontCornerColor and \
+                        self.cube.cubeRepr[rightFace][rightRow][rightCol] == rightCornerColor and \
+                        self.cube.cubeRepr[downFace][downRow][downCol] == 'w':
+                    for move in movesList:
+                        self.cube.turn(move)
+                    break
+            # self.cube.turn(Cube.Move.Y)
+
+
     def solve(self):
         self.__createWhiteCross()
+        self.__placeBottomLayerCorners()
