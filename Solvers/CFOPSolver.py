@@ -1,41 +1,45 @@
 from Solvers.Solver import Solver
 from Cube.Cube import Cube
+from Cube.Move import *
+
 
 class CFOPSolver(Solver):
     __whiteCrossMoves = [
         # Bottom layer edges.
         ((Cube.FRONT, 2, 1), (Cube.DOWN, 0, 1), []),
-        ((Cube.DOWN, 0, 1), (Cube.FRONT, 2, 1), [Cube.Move.F_, Cube.Move.D, Cube.Move.R_, Cube.Move.D_]),
-        ((Cube.RIGHT, 2, 1), (Cube.DOWN, 1, 2), [Cube.Move.R2, Cube.Move.U, Cube.Move.F2]),
-        ((Cube.DOWN, 1, 2), (Cube.RIGHT, 2, 1), [Cube.Move.R, Cube.Move.F]),
-        ((Cube.BACK, 2, 1), (Cube.DOWN, 2, 1), [Cube.Move.B2, Cube.Move.U2, Cube.Move.F2]),
-        ((Cube.DOWN, 2, 1), (Cube.BACK, 2, 1), [Cube.Move.B, Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.F2]),
-        ((Cube.LEFT, 2, 1), (Cube.DOWN, 1, 0), [Cube.Move.L2, Cube.Move.U_, Cube.Move.F2]),
-        ((Cube.DOWN, 1, 0), (Cube.LEFT, 2, 1), [Cube.Move.L_, Cube.Move.F_, Cube.Move.L]),
+        ((Cube.DOWN, 0, 1), (Cube.FRONT, 2, 1), [F_, D, R_, D_]),
+        ((Cube.RIGHT, 2, 1), (Cube.DOWN, 1, 2), [R2, U, F2]),
+        ((Cube.DOWN, 1, 2), (Cube.RIGHT, 2, 1), [R, F]),
+        ((Cube.BACK, 2, 1), (Cube.DOWN, 2, 1), [B2, U2, F2]),
+        ((Cube.DOWN, 2, 1), (Cube.BACK, 2, 1), [B, R_, U, R, F2]),
+        ((Cube.LEFT, 2, 1), (Cube.DOWN, 1, 0), [L2, U_, F2]),
+        ((Cube.DOWN, 1, 0), (Cube.LEFT, 2, 1), [L_, F_, L]),
         # Middle layer edges.
-        ((Cube.FRONT, 1, 2), (Cube.RIGHT, 1, 0), [Cube.Move.F]),
-        ((Cube.RIGHT, 1, 0), (Cube.FRONT, 1, 2), [Cube.Move.R, Cube.Move.U, Cube.Move.R_, Cube.Move.F2]),
-        ((Cube.RIGHT, 1, 2), (Cube.BACK, 1, 0), [Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.F2]),
-        ((Cube.BACK, 1, 0), (Cube.RIGHT, 1, 2), [Cube.Move.R2, Cube.Move.F, Cube.Move.R2]),
-        ((Cube.BACK, 1, 2), (Cube.LEFT, 1, 0), [Cube.Move.B_, Cube.Move.U2, Cube.Move.B, Cube.Move.F2]),
-        ((Cube.LEFT, 1, 0), (Cube.BACK, 1, 2), [Cube.Move.L, Cube.Move.U_, Cube.Move.L_, Cube.Move.F2]),
-        ((Cube.LEFT, 1, 2), (Cube.FRONT, 1, 0), [Cube.Move.L_, Cube.Move.U_, Cube.Move.L, Cube.Move.F2]),
-        ((Cube.FRONT, 1, 0), (Cube.LEFT, 1, 2), [Cube.Move.F_]),
+        ((Cube.FRONT, 1, 2), (Cube.RIGHT, 1, 0), [F]),
+        ((Cube.RIGHT, 1, 0), (Cube.FRONT, 1, 2), [R, U, R_, F2]),
+        ((Cube.RIGHT, 1, 2), (Cube.BACK, 1, 0), [R_, U, R, F2]),
+        ((Cube.BACK, 1, 0), (Cube.RIGHT, 1, 2), [R2, F, R2]),
+        ((Cube.BACK, 1, 2), (Cube.LEFT, 1, 0), [B_, U2, B, F2]),
+        ((Cube.LEFT, 1, 0), (Cube.BACK, 1, 2), [L, U_, L_, F2]),
+        ((Cube.LEFT, 1, 2), (Cube.FRONT, 1, 0), [L_, U_, L, F2]),
+        ((Cube.FRONT, 1, 0), (Cube.LEFT, 1, 2), [F_]),
         # Top edges.
-        ((Cube.FRONT, 0, 1), (Cube.UP, 2, 1), [Cube.Move.F2]),
-        ((Cube.UP, 2, 1), (Cube.FRONT, 0, 1), [Cube.Move.U_, Cube.Move.R_, Cube.Move.F, Cube.Move.R]),
-        ((Cube.RIGHT, 0, 1), (Cube.UP, 1, 2), [Cube.Move.U, Cube.Move.F2]),
-        ((Cube.UP, 1, 2), (Cube.RIGHT, 0, 1), [Cube.Move.R_, Cube.Move.F, Cube.Move.R]),
-        ((Cube.BACK, 0, 1), (Cube.UP, 0, 1), [Cube.Move.U2, Cube.Move.F2]),
-        ((Cube.UP, 0, 1), (Cube.BACK, 0, 1), [Cube.Move.U, Cube.Move.R_, Cube.Move.F, Cube.Move.R]),
-        ((Cube.LEFT, 0, 1), (Cube.UP, 1, 0), [Cube.Move.U_, Cube.Move.F2]),
-        ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [Cube.Move.L, Cube.Move.F_, Cube.Move.L_]),
+        ((Cube.FRONT, 0, 1), (Cube.UP, 2, 1), [F2]),
+        ((Cube.UP, 2, 1), (Cube.FRONT, 0, 1), [U_, R_, F, R]),
+        ((Cube.RIGHT, 0, 1), (Cube.UP, 1, 2), [U, F2]),
+        ((Cube.UP, 1, 2), (Cube.RIGHT, 0, 1), [R_, F, R]),
+        ((Cube.BACK, 0, 1), (Cube.UP, 0, 1), [U2, F2]),
+        ((Cube.UP, 0, 1), (Cube.BACK, 0, 1), [U, R_, F, R]),
+        ((Cube.LEFT, 0, 1), (Cube.UP, 1, 0), [U_, F2]),
+        ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [L, F_, L_]),
     ]
 
     __bottomLayerCornersMoves = [
         ((Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), []),
-        ((Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), [Cube.Move.R, Cube.Move.U, Cube.Move.R_, Cube.Move.U_, Cube.Move.R, Cube.Move.U, Cube.Move.R_]),
-        ((Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), [Cube.Move.R, Cube.Move.U_, Cube.Move.R_, Cube.Move.U, Cube.Move.R, Cube.Move.U_, Cube.Move.R_]),
+        ((Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), [R, U, R_, U_, R, U, R_]),
+        ((Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), [R, U_, R_, U, R, U_, R_]),
+
+        ((Cube.RIGHT, 2, 2), (Cube.BACK, 2, 0), (Cube.DOWN, 2, 2), [R]),
     ]
 
     def __createWhiteCross(self):
@@ -45,7 +49,7 @@ class CFOPSolver(Solver):
                     for move in movesList:
                         self.cube.turn(move)
                     break
-            self.cube.turn(Cube.Move.Y)
+            self.cube.turn(Y)
 
     def __placeBottomLayerCorners(self):
         for (frontCornerColor, rightCornerColor) in [('r', 'g')]:
@@ -56,9 +60,9 @@ class CFOPSolver(Solver):
                     for move in movesList:
                         self.cube.turn(move)
                     break
-            # self.cube.turn(Cube.Move.Y)
+            # self.cube.turn(Y)
 
 
     def solve(self):
         self.__createWhiteCross()
-        self.__placeBottomLayerCorners()
+        # self.__placeBottomLayerCorners()
