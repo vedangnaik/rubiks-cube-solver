@@ -75,11 +75,11 @@ class CFOPSolver(Solver):
         ((Cube.RIGHT, 1, 2), (Cube.BACK, 1, 0), [R_, U, R, U, B, U_, B_, U,   R, U_, R_, U_, F_, U, F]),
         ((Cube.BACK, 1, 0), (Cube.RIGHT, 1, 2), [R_, U, R, U, B, U_, B_, U_,  U_, F_, U, F, U, R, U_, R_]),
 
-        ((Cube.BACK, 1, 2), (Cube.LEFT, 1, 0), [L, U_, L_, U, B_, U, B, U_,  U_, F_, U, F, U, R, U_, R_]),
-        ((Cube.LEFT, 1, 0), (Cube.BACK, 1, 2), [L, U_, L_, U, B_, U, B, U,   R, U_, R_, U_, F_, U, F]),
+        ((Cube.BACK, 1, 2), (Cube.LEFT, 1, 0), [L, U_, L_, U_, B_, U, B, U_,  U_, F_, U, F, U, R, U_, R_]),
+        ((Cube.LEFT, 1, 0), (Cube.BACK, 1, 2), [L, U_, L_, U_, B_, U, B, U,   R, U_, R_, U_, F_, U, F]),
 
-        ((Cube.FRONT, 1, 0), (Cube.LEFT, 1, 2), [L_, U, L, U, F, U_, F, F_, U, F, U, R, U_, R_]),
-        ((Cube.LEFT, 1, 2), (Cube.FRONT, 1, 0), [L_, U, L, U, F, U_, F, U_, R, U_, R_, U_, F_, U, F]),
+        ((Cube.FRONT, 1, 0), (Cube.LEFT, 1, 2), [L_, U, L, U, F, U_, F_, F_, U, F, U, R, U_, R_]),
+        ((Cube.LEFT, 1, 2), (Cube.FRONT, 1, 0), [L_, U, L, U, F, U_, F_, U_, R, U_, R_, U_, F_, U, F]),
 
         ((Cube.FRONT, 0, 1), (Cube.UP, 2, 1), [U, R, U_, R_, U_, F_, U, F]),
         ((Cube.UP, 2, 1), (Cube.FRONT, 0, 1), [U2, F_, U, F, U, R, U_, R_]),
@@ -118,7 +118,8 @@ class CFOPSolver(Solver):
     def __placeMiddleLayerEdges(self):
         for (edgeFrontColor, edgeRightColor) in [('r', 'g'), ('g', 'o'), ('o', 'b'), ('b', 'r')]:
             for ((edgeFace, edgeRow, edgeCol), (whiteFace, whiteRow, whiteCol), movesList) in self.__middleLayerEdgesMoves:
-                if self.cube.cubeRepr[edgeFace][edgeRow][edgeCol] == edgeFrontColor and self.cube.cubeRepr[whiteFace][whiteRow][whiteCol] == edgeRightColor:
+                if self.cube.cubeRepr[edgeFace][edgeRow][edgeCol] == edgeFrontColor and \
+                        self.cube.cubeRepr[whiteFace][whiteRow][whiteCol] == edgeRightColor:
                     for move in movesList:
                         self.cube.turn(move)
                     break
@@ -128,4 +129,4 @@ class CFOPSolver(Solver):
     def solve(self):
         self.__createWhiteCross()
         self.__placeBottomLayerCorners()
-        # self.__placeMiddleLayerEdges()
+        self.__placeMiddleLayerEdges()
