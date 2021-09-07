@@ -145,53 +145,34 @@ class CFOPSolver(Solver):
                     break
             self.cube.turn(Y)
 
-    def __performOLLFirstLook(self):
-        while(True):
-            for (yellowCoords, movesList) in self.__OLLFirstLookMoves:
-                patternFound = True
-                # Check if listed coords are all yellow.
-                for (yellowFace, yellowRow, yellowCol) in yellowCoords:
-                    if self.cube.cubeRepr[yellowFace][yellowRow][yellowCol] != 'y':
-                        patternFound = False
+    def __orientLastLayer(self):
+        # This order is essential, otherwise it won't work.
+        for patterns in [self.__OLLFirstLookMoves, self.__OLLSecondLookMoves]:
+            currentOLLStepDone = False # Flag for the whole step's status.
+            while(not currentOLLStepDone):
+                for (yellowCoords, movesList) in patterns:
+                    patternFound = True # Flag for whether the current pattern is satisified or not.
+                    # Check if listed coords are all yellow.
+                    for (yellowFace, yellowRow, yellowCol) in yellowCoords:
+                        if self.cube.cubeRepr[yellowFace][yellowRow][yellowCol] != 'y':
+                            patternFound = False
+                            break
+                    # If they are, perform the moves, restore the cube, then return.
+                    if patternFound:
+                        for move in movesList:
+                            self.cube.turn(move)
+                        currentOLLStepDone = True
                         break
-                # If they are, perform the moves, restore the cube, then return.
-                if patternFound:
-                    for move in movesList:
-                        self.cube.turn(move)
-                    # Rotate the cube so that red is front again.
-                    while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
-                        self.cube.turn(Y)
-                    return
-                # Else, continue checking the other patterns.
-            
-            # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
+                    # Else, continue checking the other patterns.
+                # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
+                self.cube.turn(Y)
+        
+        # Rotate the cube so that red is front again.
+        while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
             self.cube.turn(Y)
-
-    def __performOLLSecondLook(self):
-        while(True):
-            for (yellowCoords, movesList) in self.__OLLSecondLookMoves:
-                patternFound = True
-                # Check if listed coords are all yellow.
-                for (yellowFace, yellowRow, yellowCol) in yellowCoords:
-                    if self.cube.cubeRepr[yellowFace][yellowRow][yellowCol] != 'y':
-                        patternFound = False
-                        break
-                # If they are, perform the moves, restore the cube, then return.
-                if patternFound:
-                    for move in movesList:
-                        self.cube.turn(move)
-                    # Rotate the cube so that red is front again.
-                    while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
-                        self.cube.turn(Y)
-                    return
-                # Else, continue checking the other patterns.
             
-            # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
-            self.cube.turn(Y)
-
     def solve(self):
         self.__createWhiteCross()
         self.__placeBottomLayerCorners()
         self.__placeMiddleLayerEdges()
-        self.__performOLLFirstLook()
-        self.__performOLLSecondLook()
+        self.__orientLastLayer()
