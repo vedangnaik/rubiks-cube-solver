@@ -56,11 +56,11 @@ class CFOPSolver(Solver):
         ((Cube.UP, 2, 2), (Cube.RIGHT, 0, 0), (Cube.FRONT, 0, 2), [U, R, U_, R_]),
 
         ((Cube.RIGHT, 0, 2), (Cube.UP, 0, 2), (Cube.BACK, 0, 0), [U, R, U, R_]),
-        ((Cube.BACK, 0, 0), (Cube.RIGHT, 0, 2), (Cube.UP, 0, 2), [R_, U, R2, U_, R_]),
+        ((Cube.BACK, 0, 0), (Cube.RIGHT, 0, 2), (Cube.UP, 0, 2), [U, R, U2, R_, U_, R, U, R_]),
         ((Cube.UP, 0, 2), (Cube.BACK, 0, 0), (Cube.RIGHT, 0, 2), [U_, R, U2, R_]),
 
         ((Cube.BACK, 0, 2), (Cube.UP, 0, 0), (Cube.LEFT, 0, 0), [U2, R, U, R_]),
-        ((Cube.LEFT, 0, 0), (Cube.BACK, 0, 2), (Cube.UP, 0, 0), [B_, U2, B, R, U_, R_]),
+        ((Cube.LEFT, 0, 0), (Cube.BACK, 0, 2), (Cube.UP, 0, 0), [U2, R, U2, R_, U_, R, U, R_]),
         ((Cube.UP, 0, 0), (Cube.LEFT, 0, 0), (Cube.BACK, 0, 2), [R, U2, R_]),
 
         ((Cube.LEFT, 0, 2), (Cube.UP, 2, 0), (Cube.FRONT, 0, 0), [U_, R, U, R_]),
@@ -78,17 +78,17 @@ class CFOPSolver(Solver):
             self.cube.turn(Y)
 
     def __placeBottomLayerCorners(self):
-        for (frontCornerColor, rightCornerColor) in [('r', 'g')]:
+        for (frontCornerColor, rightCornerColor) in [('r', 'g'), ('g', 'o'), ('o', 'b'), ('b', 'r')]:
             for ((frontFace, frontRow, frontCol), (rightFace, rightRow, rightCol), (downFace, downRow, downCol), movesList) in self.__bottomLayerCornersMoves:
                 if self.cube.cubeRepr[frontFace][frontRow][frontCol] == frontCornerColor and \
                         self.cube.cubeRepr[rightFace][rightRow][rightCol] == rightCornerColor and \
-                        self.cube.cubeRepr[downFace][downRow][downCol] == 'w':
+                        self.cube.cubeRepr[downFace][downRow][downCol] == 'w': # This color is always white since it's for the bottom layer.
                     for move in movesList:
                         self.cube.turn(move)
                     break
-            # self.cube.turn(Y)
+            self.cube.turn(Y)
 
 
     def solve(self):
-        # self.__createWhiteCross()
+        self.__createWhiteCross()
         self.__placeBottomLayerCorners()
