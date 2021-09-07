@@ -1,3 +1,4 @@
+from Solvers.Solver import Solver
 from Cube.Cube import Cube
 from Cube.Move import *
 from colorama import init
@@ -10,12 +11,15 @@ if __name__ == "__main__":
     for test in range(5000):
         print(test)
         a = Cube()
+        # a.draw()
 
         for _ in range(random.randint(10, 65)):
             a.turn(random.choice([F, F_, F2, R, R_, R2, B, B_, B2, L, L_, L2, U, U_, U2, D, D_, D2]))
+        # a.draw()
 
         s = CFOPSolver(a)
         s.solve()
+        # a.draw()
 
         assert(a.cubeRepr[Cube.FRONT][2][1] == 'r' and a.cubeRepr[Cube.DOWN][0][1] == 'w')
         assert(a.cubeRepr[Cube.RIGHT][2][1] == 'g' and a.cubeRepr[Cube.DOWN][1][2] == 'w')
@@ -31,3 +35,8 @@ if __name__ == "__main__":
         assert(a.cubeRepr[Cube.RIGHT][1][2] == 'g' and a.cubeRepr[Cube.BACK][1][0] == 'o')
         assert(a.cubeRepr[Cube.BACK][1][2] == 'o' and a.cubeRepr[Cube.LEFT][1][0] == 'b')
         assert(a.cubeRepr[Cube.LEFT][1][2] == 'b' and a.cubeRepr[Cube.FRONT][1][0] == 'r')
+
+        assert(a.cubeRepr[Cube.UP][0][1] == 'y')
+        assert(a.cubeRepr[Cube.UP][1][0] == 'y')
+        assert(a.cubeRepr[Cube.UP][1][2] == 'y')
+        assert(a.cubeRepr[Cube.UP][2][1] == 'y')

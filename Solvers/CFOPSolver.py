@@ -94,6 +94,13 @@ class CFOPSolver(Solver):
         ((Cube.UP, 1, 0), (Cube.LEFT, 0, 1), [U, F_, U, F, U, R, U_, R_]),
     ]
 
+    __OLLFirstLookMoves = [
+        ([(Cube.UP, 0, 1), (Cube.UP, 1, 0), (Cube.UP, 1, 2), (Cube.UP, 2, 1)], []),
+        ([(Cube.BACK, 0, 1), (Cube.LEFT, 0, 1), (Cube.UP, 1, 2), (Cube.UP, 2, 1)], [B, U, L, U_, L_, B_]),
+        ([(Cube.BACK, 0, 1), (Cube.UP, 1, 0), (Cube.UP, 1, 2), (Cube.FRONT, 0, 1)], [F, R, U, R_, U_, F_]),
+        ([(Cube.BACK, 0, 1), (Cube.LEFT, 0, 1), (Cube.RIGHT, 0, 1), (Cube.FRONT, 0, 1)], [F, R, U, R_, U_, F_, B, U, L, U_, L_, B_, ]),
+    ]
+
     def __createWhiteCross(self):
         for edgeColor in ['r', 'g', 'o', 'b']:
             for ((edgeFace, edgeRow, edgeCol), (whiteFace, whiteRow, whiteCol), movesList) in self.__whiteCrossMoves:
@@ -125,8 +132,30 @@ class CFOPSolver(Solver):
                     break
             self.cube.turn(Y)
 
+    def __performOLLFirstLook(self):
+        while(True):
+            for (yellowCoords, movesList) in self.__OLLFirstLookMoves:
+                patternFound = True
+                # Check if listed coords are all yellow.
+                for (yellowFace, yellowRow, yellowCol) in yellowCoords:
+                    if self.cube.cubeRepr[yellowFace][yellowRow][yellowCol] != 'y':
+                        patternFound = False
+                        break
+                # If they are, perform the moves, restore the cube, then return.
+                if patternFound:
+                    for move in movesList:
+                        self.cube.turn(move)
+                    # Rotate the cube so that red is front again.
+                    while (self.cube.cubeRepr[Cube.FRONT][1][1] != 'r'):
+                        self.cube.turn(Y)
+                    return
+                # Else, continue checking the other patterns.
+            
+            # If none of the patterns match, that means the cube isn't oriented correctly. Do a Y rotation and try again.
+            self.cube.turn(Y)
 
     def solve(self):
         self.__createWhiteCross()
         self.__placeBottomLayerCorners()
         self.__placeMiddleLayerEdges()
+        self.__performOLLFirstLook()
