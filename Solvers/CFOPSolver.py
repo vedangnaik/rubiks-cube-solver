@@ -39,7 +39,33 @@ class CFOPSolver(Solver):
         ((Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), (Cube.RIGHT, 2, 0), [R, U, R_, U_, R, U, R_]),
         ((Cube.RIGHT, 2, 0), (Cube.DOWN, 0, 2), (Cube.FRONT, 2, 2), [R, U_, R_, U, R, U_, R_]),
 
-        ((Cube.RIGHT, 2, 2), (Cube.BACK, 2, 0), (Cube.DOWN, 2, 2), [R]),
+        ((Cube.RIGHT, 2, 2), (Cube.BACK, 2, 0), (Cube.DOWN, 2, 2), [B, U, B_, U, R, U_, R_]),
+        ((Cube.DOWN, 2, 2), (Cube.RIGHT, 2, 2), (Cube.BACK, 2, 0), [B, U, B_, R, U, R_]),
+        ((Cube.BACK, 2, 0), (Cube.DOWN, 2, 2), (Cube.RIGHT, 2, 2), [R_, U2, R2, U_, R_]),
+
+        ((Cube.BACK, 2, 2), (Cube.LEFT, 2, 0), (Cube.DOWN, 2, 0), [B_, U2, B, R, U, R_]),
+        ((Cube.DOWN, 2, 0), (Cube.BACK, 2, 2), (Cube.LEFT, 2, 0), [L, U2, L_, R, U, R_]),
+        ((Cube.LEFT, 2, 0), (Cube.DOWN, 2, 0), (Cube.BACK, 2, 2), [B_, U_, B, R, U_, R_]),
+
+        ((Cube.LEFT, 2, 2), (Cube.FRONT, 2, 0), (Cube.DOWN, 0, 0), [L_, U_, L, R, U, R_]),
+        ((Cube.DOWN, 0, 0), (Cube.LEFT, 2, 2), (Cube.FRONT, 2, 0), [F, U, F_, U2, R, U, R_]),
+        ((Cube.FRONT, 2, 0), (Cube.DOWN, 0, 0), (Cube.LEFT, 2, 2), [L_, R, U_, R_, L]),
+
+        ((Cube.FRONT, 0, 2), (Cube.UP, 2, 2), (Cube.RIGHT, 0, 0), [R, U, R_]),
+        ((Cube.RIGHT, 0, 0), (Cube.FRONT, 0, 2), (Cube.UP, 2, 2), [R, U2, R_, U_, R, U, R_]),
+        ((Cube.UP, 2, 2), (Cube.RIGHT, 0, 0), (Cube.FRONT, 0, 2), [U, R, U_, R_]),
+
+        ((Cube.RIGHT, 0, 2), (Cube.UP, 0, 2), (Cube.BACK, 0, 0), [U, R, U, R_]),
+        ((Cube.BACK, 0, 0), (Cube.RIGHT, 0, 2), (Cube.UP, 0, 2), [R_, U, R2, U_, R_]),
+        ((Cube.UP, 0, 2), (Cube.BACK, 0, 0), (Cube.RIGHT, 0, 2), [U_, R, U2, R_]),
+
+        ((Cube.BACK, 0, 2), (Cube.UP, 0, 0), (Cube.LEFT, 0, 0), [U2, R, U, R_]),
+        ((Cube.LEFT, 0, 0), (Cube.BACK, 0, 2), (Cube.UP, 0, 0), [B_, U2, B, R, U_, R_]),
+        ((Cube.UP, 0, 0), (Cube.LEFT, 0, 0), (Cube.BACK, 0, 2), [R, U2, R_]),
+
+        ((Cube.LEFT, 0, 2), (Cube.UP, 2, 0), (Cube.FRONT, 0, 0), [U_, R, U, R_]),
+        ((Cube.FRONT, 0, 0), (Cube.LEFT, 0, 2), (Cube.UP, 2, 0), [U_, R, U2, R_, U_, R, U, R_]),
+        ((Cube.UP, 2, 0), (Cube.FRONT, 0, 0), (Cube.LEFT, 0, 2), [R, U_, R_]),
     ]
 
     def __createWhiteCross(self):
@@ -64,5 +90,5 @@ class CFOPSolver(Solver):
 
 
     def solve(self):
-        self.__createWhiteCross()
-        # self.__placeBottomLayerCorners()
+        # self.__createWhiteCross()
+        self.__placeBottomLayerCorners()
